@@ -171,24 +171,24 @@ export default function HomePage() {
               ) : (
                 <div className="flex-1 space-y-4 overflow-y-auto">
                   {cart.map((item) => (
-                    <div
-                      key={`${item.id}-${item.size}-${item.color}`}
-                      className="flex justify-between items-center border-b pb-2"
-                    >
-                      <div>
-                        <h3 className="font-medium">{item.name}</h3>
-                        <p className="text-sm text-gray-600">
-                          {item.size} • {item.color} • ${item.price.toFixed(2)}
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => removeFromCart(item)}
-                        className="text-red-500 text-sm hover:underline"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  ))}
+  <div
+    key={`${item.id}-${item.size}-${item.color}`}
+    className="flex justify-between items-center border-b pb-2"
+  >
+    <div>
+      <h3 className="font-medium">{item.name}</h3>
+      <p className="text-sm text-gray-600">
+        {item.size} • {item.color} • ${item.price.toFixed(2)}
+      </p>
+    </div>
+    <button
+      onClick={() => removeFromCart(item.id, item.size, item.color)}
+      className="text-red-500 text-sm hover:underline"
+    >
+      Remove
+    </button>
+  </div>
+))}
                 </div>
               )}
 
