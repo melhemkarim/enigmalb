@@ -1,4 +1,3 @@
-// app/page.tsx
 "use client";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -7,7 +6,16 @@ import { useState } from "react";
 import { ShoppingBag, X } from "lucide-react";
 import { useCart } from "./context/CartContext";
 
-const products = [
+// Product interface
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  category: string;
+}
+
+const products: Product[] = [
   { id: 1, name: "Graphic T-Shirt", price: 29.99, image: "/product1.png", category: "Tops" },
   { id: 2, name: "Leather Bracelet", price: 19.99, image: "/product1.png", category: "Accessories" },
   { id: 3, name: "Poster Artwork", price: 14.99, image: "/product1.png", category: "Posters" },
@@ -21,8 +29,16 @@ export default function HomePage() {
   const [toast, setToast] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const handleAddToCart = (product: any) => {
-    addToCart(product);
+  const handleAddToCart = (product: Product) => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      size: "M",
+      color: "Black",
+      quantity: 1,
+    });
     setToast(`${product.name} added to cart`);
     setTimeout(() => setToast(null), 2500);
   };
@@ -119,9 +135,11 @@ export default function HomePage() {
               className="relative rounded-xl overflow-hidden shadow-md group"
             >
               <Link href={`/product/${product.id}`}>
-                <img
+                <Image
                   src={product.image}
                   alt={product.name}
+                  width={400}
+                  height={350}
                   className="w-full h-140 object-cover cursor-pointer"
                 />
                 <div className="absolute top-3 left-3 bg-black/60 text-white px-3 py-1 rounded-md text-sm font-medium">
@@ -153,24 +171,24 @@ export default function HomePage() {
               ) : (
                 <div className="flex-1 space-y-4 overflow-y-auto">
                   {cart.map((item) => (
-  <div
-    key={`${item.id}-${item.size}-${item.color}`}
-    className="flex justify-between items-center border-b pb-2"
-  >
-    <div>
-      <h3 className="font-medium">{item.name}</h3>
-      <p className="text-sm text-gray-600">
-        {item.size} • {item.color} • ${item.price.toFixed(2)}
-      </p>
-    </div>
-    <button
-      onClick={() => removeFromCart(item.id, item.size, item.color)}
-      className="text-red-500 text-sm hover:underline"
-    >
-      Remove
-    </button>
-  </div>
-))}
+                    <div
+                      key={`${item.id}-${item.size}-${item.color}`}
+                      className="flex justify-between items-center border-b pb-2"
+                    >
+                      <div>
+                        <h3 className="font-medium">{item.name}</h3>
+                        <p className="text-sm text-gray-600">
+                          {item.size} • {item.color} • ${item.price.toFixed(2)}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => removeFromCart(item)}
+                        className="text-red-500 text-sm hover:underline"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
                 </div>
               )}
 
@@ -198,19 +216,14 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="bg-black text-gray-300 py-10 mt-16">
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-          {/* Logo */}
           <Link href="/">
             <Image src="/logo-white.png" alt="Logo" width={120} height={50} className="object-contain" />
           </Link>
-
-          {/* Links */}
           <div className="flex gap-6 text-sm">
             <Link href="/" className="hover:text-white">Home</Link>
             <Link href="/#products" className="hover:text-white">Products</Link>
             <Link href="/#contact" className="hover:text-white">Contact</Link>
           </div>
-
-          {/* Copyright */}
           <p className="text-xs text-gray-500">© {new Date().getFullYear()} Your Brand. All rights reserved.</p>
         </div>
       </footer>
